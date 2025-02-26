@@ -34,14 +34,14 @@ main() {
   fi
   # Put all dependencies in their own directory to ensure they aren't included implicitly
   mkdir -p "$DEPS_DIR"
-  # Get tree-sitter-tlaplus
-  curl -L https://github.com/tlaplus-community/tree-sitter-tlaplus/archive/main.zip --output tree-sitter-tlaplus.zip
-  7z x tree-sitter-tlaplus.zip
-  mv tree-sitter-tlaplus-main "$DEPS_DIR/tree-sitter-tlaplus"
-  rm tree-sitter-tlaplus.zip
   # Get TLA⁺ tools
   mkdir -p "$DEPS_DIR/tools"
   curl http://nightly.tlapl.us/dist/tla2tools.jar --output "$DEPS_DIR/tools/tla2tools.jar"
+  # Get Apalache
+  curl -L https://github.com/informalsystems/apalache/releases/latest/download/apalache.zip --output apalache.zip
+  7z x apalache.zip
+  mv apalache "$DEPS_DIR/"
+  rm apalache.zip
   # Get TLA⁺ community modules
   mkdir -p "$DEPS_DIR/community"
   curl -L https://github.com/tlaplus/CommunityModules/releases/latest/download/CommunityModules-deps.jar --output "$DEPS_DIR/community/modules.jar"
@@ -50,6 +50,12 @@ main() {
   7z x tlapm.zip
   mv tlapm-main "$DEPS_DIR/tlapm"
   rm tlapm.zip
+  # Get TLAUC
+  mkdir -p "$DEPS_DIR/tlauc"
+  curl -L https://github.com/tlaplus-community/tlauc/releases/latest/download/tlauc-windows.zip --output tlauc.zip
+  7z x tlauc.zip
+  mv tlauc.exe "$DEPS_DIR/tlauc/"
+  rm tlauc.zip
 }
 
 main "$@"

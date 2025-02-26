@@ -50,6 +50,35 @@ def write_json(data, path):
     with open(path, 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=2, ensure_ascii=False)
 
+def parse_module(examples_root, parser, path):
+    """
+    Parses a .tla file with tree-sitter; returns the parse tree along with
+    whether a parse error was detected.
+    """
+    module_text = None
+    path = from_cwd(examples_root, path)
+    with open(path, 'rb') as module_file:
+        module_text = module_file.read()
+    tree = parser.parse(module_text)
+    return (tree, module_text, tree.root_node.has_error)
+
+def all_nodes_of(query_map):
+    """
+    Flatten a query result to get all matched nodes. Returned in order of
+    occurrence in file.
+    """
+    return sorted([
+        node
+        for capture in query_map.values()
+        for node in capture
+    ], key=lambda node: node.start_byte)
+
+def node_to_string(module_bytes, node):
+    """
+    Gets the string covered by the given tree-sitter parse tree node.
+    """
+    return module_bytes[node.start_byte:node.end_byte].decode('utf-8')
+
 def parse_timespan(unparsed):
     """
     Parses the timespan format used in the manifest.json format.
@@ -75,37 +104,79 @@ def get_run_mode(mode):
     else:
         raise NotImplementedError(f'Undefined model-check mode {mode}')
 
-def check_model(tools_jar_path, module_path, model_path, tlapm_lib_path, community_jar_path, mode, hard_timeout_in_seconds):
+def get_tlc_feature_flags(module_features, model_features):
+    """
+    Selectively enables experimental TLC features according to needs.
+    """
+    jvm_parameters = []
+    if 'action composition' in module_features:
+        jvm_parameters.append('-Dtlc2.tool.impl.Tool.cdot=true')
+    return jvm_parameters
+
+def check_model(
+        tools_jar_path,
+        apalache_path,
+        module_path,
+        model_path,
+        tlapm_lib_path,
+        community_jar_path,
+        mode,
+        module_features,
+        model_features,
+        enable_assertions,
+        hard_timeout_in_seconds
+    ):
     """
     Model-checks the given model against the given module.
     """
     tools_jar_path = normpath(tools_jar_path)
+    apalache_path = normpath(join(apalache_path, 'bin', 'apalache-mc'))
+    apalache_jar_path = normpath(join(apalache_path, 'lib', 'apalache.jar'))
     module_path = normpath(module_path)
     model_path = normpath(model_path)
     tlapm_lib_path = normpath(tlapm_lib_path)
     community_jar_path = normpath(community_jar_path)
     try:
-        tlc = subprocess.run(
-            [
-                'java',
+        if mode == 'symbolic':
+            apalache = subprocess.run([
+                    apalache_path, 'check',
+                    f'--config={model_path}',
+                    module_path
+                ],
+                timeout=hard_timeout_in_seconds,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True
+            )
+            return apalache
+        else:
+            jvm_parameters = (['-enableassertions'] if enable_assertions else []) + [
                 '-Dtlc2.TLC.ide=Github',
                 '-Dutil.ExecutionStatisticsCollector.id=abcdef60f238424fa70d124d0c77ffff',
                 '-XX:+UseParallelGC',
                 # Jar paths must go first
-                '-cp', pathsep.join([tools_jar_path, community_jar_path, tlapm_lib_path]),
-                'tlc2.TLC',
+                '-cp', pathsep.join([
+                    tools_jar_path,
+                    apalache_jar_path,
+                    community_jar_path,
+                    tlapm_lib_path
+                ]),
+            ] + get_tlc_feature_flags(module_features, model_features)
+            tlc_parameters = [
                 module_path,
                 '-config', model_path,
                 '-workers', 'auto',
                 '-lncheck', 'final',
                 '-cleanup'
-            ] + get_run_mode(mode),
-            timeout=hard_timeout_in_seconds,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True
-        )
-        return tlc
+            ] + get_run_mode(mode)
+            tlc = subprocess.run(
+                ['java'] + jvm_parameters + ['tlc2.TLC'] + tlc_parameters,
+                timeout=hard_timeout_in_seconds,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True
+            )
+            return tlc
     except subprocess.TimeoutExpired as e:
         return e
 

@@ -9,10 +9,7 @@ It serves as:
 - a collection of case studies in the application of formal specification in TLA<sup>+</sup>
 
 All TLA<sup>+</sup> specs can be found in the [`specifications`](specifications) directory.
-The table below lists all specs and their features, such as whether they are suitable for beginners or use PlusCal.
-The [`manifest.json`](manifest.json) file is the source of truth for this table, and is a detailed human- & machine-readable description of the specs & their models.
-Its schema is [`manifest-schema.json`](manifest-schema.json).
-All specs in this repository are subject to CI validation to ensure quality.
+The table below lists all specs and indicates whether a spec is beginner-friendly, includes an additional PlusCal variant `(✔)`, or uses PlusCal exclusively. Additionally, the table specifies which verification tool—[TLC](https://github.com/tlaplus/tlaplus), [Apalache](https://github.com/apalache-mc/apalache), or [TLAPS](https://github.com/tlaplus/tlapm)—can be used to verify each specification.
 
 ## Examples Included Here
 Here is a list of specs included in this repository, with links to the relevant directory and flags for various features:
@@ -33,11 +30,12 @@ Here is a list of specs included in this repository, with links to the relevant 
 | [Missionaries and Cannibals](specifications/MissionariesAndCannibals)                               | Leslie Lamport                                      |    ✔     |             |         |     ✔     |          |
 | [Stone Scale Puzzle](specifications/Stones)                                                         | Leslie Lamport                                      |    ✔     |             |         |     ✔     |          |
 | [The Coffee Can Bean Problem](specifications/CoffeeCan)                                             | Andrew Helwer                                       |    ✔     |             |         |     ✔     |          |
+| [EWD687a: Detecting Termination in Distributed Computations](specifications/ewd687a)                | Stephan Merz, Leslie Lamport, Markus Kuppe          |    ✔     |             |   (✔)   |     ✔     |          |
 | [The Boulangerie Algorithm](specifications/Bakery-Boulangerie)                                      | Leslie Lamport, Stephan Merz                        |          |      ✔      |    ✔    |     ✔     |          |
 | [Misra Reachability Algorithm](specifications/MisraReachability)                                    | Leslie Lamport                                      |          |      ✔      |    ✔    |     ✔     |          |
 | [Byzantizing Paxos by Refinement](specifications/byzpaxos)                                          | Leslie Lamport                                      |          |      ✔      |    ✔    |     ✔     |          |
 | [EWD840: Termination Detection in a Ring](specifications/ewd840)                                    | Stephan Merz                                        |          |      ✔      |         |     ✔     |          |
-| [EWD998: Termination Detection in a Ring with Asynchronous Message Delivery](specifications/ewd998) | Stephan Merz, Markus Kuppe                          |          |      ✔      |         |     ✔     |          |
+| [EWD998: Termination Detection in a Ring with Asynchronous Message Delivery](specifications/ewd998) | Stephan Merz, Markus Kuppe                          |          |      ✔      |   (✔)   |     ✔     |          |
 | [The Paxos Protocol](specifications/Paxos)                                                          | Leslie Lamport                                      |          |      ✔      |         |     ✔     |          |
 | [Asynchronous Reliable Broadcast](specifications/bcastByz)                                          | Thanh Hai Tran, Igor Konnov, Josef Widder           |          |      ✔      |         |     ✔     |          |
 | [Distributed Mutual Exclusion](specifications/lamport_mutex)                                        | Stephan Merz                                        |          |      ✔      |         |     ✔     |          |
@@ -46,13 +44,13 @@ Here is a list of specs included in this repository, with links to the relevant 
 | [Dijkstra's Mutual Exclusion Algorithm](specifications/dijkstra-mutex)                              | Leslie Lamport                                      |          |             |    ✔    |     ✔     |          |
 | [The Echo Algorithm](specifications/echo)                                                           | Stephan Merz                                        |          |             |    ✔    |     ✔     |          |
 | [The TLC Safety Checking Algorithm](specifications/TLC)                                             | Markus Kuppe                                        |          |             |    ✔    |     ✔     |          |
-| [EWD687a: Detecting Termination in Distributed Computations](specifications/ewd687a)                | Stephan Merz, Leslie Lamport, Markus Kuppe          |          |             |    ✔    |     ✔     |          |
 | [Transaction Commit Models](specifications/transaction_commit)                                      | Leslie Lamport, Jim Gray, Murat Demirbas            |          |             |    ✔    |     ✔     |          |
 | [The Slush Protocol](specifications/SlushProtocol)                                                  | Andrew Helwer                                       |          |             |    ✔    |     ✔     |          |
 | [Minimal Circular Substring](specifications/LeastCircularSubstring)                                 | Andrew Helwer                                       |          |             |    ✔    |     ✔     |          |
 | [Snapshot Key-Value Store](specifications/KeyValueStore)                                            | Andrew Helwer, Murat Demirbas                       |          |             |    ✔    |     ✔     |          |
 | [Chang-Roberts Algorithm for Leader Election in a Ring](specifications/chang_roberts)               | Stephan Merz                                        |          |             |    ✔    |     ✔     |          |
 | [MultiPaxos in SMR-Style](specifications/MultiPaxos-SMR)                                            | Guanzhou Hu                                         |          |             |    ✔    |     ✔     |          |
+| [Einstein's Riddle](specifications/EinsteinRiddle)                                                  | Isaac DeFrain, Giuliano Losa                        |          |             |         |           |    ✔     |
 | [Resource Allocator](specifications/allocator)                                                      | Stephan Merz                                        |          |             |         |     ✔     |          |
 | [Transitive Closure](specifications/TransitiveClosure)                                              | Stephan Merz                                        |          |             |         |     ✔     |          |
 | [Atomic Commitment Protocol](specifications/acp)                                                    | Stephan Merz                                        |          |             |         |     ✔     |          |
@@ -70,7 +68,6 @@ Here is a list of specs included in this repository, with links to the relevant 
 | [Multi-Car Elevator System](specifications/MultiCarElevator)                                        | Andrew Helwer                                       |          |             |         |     ✔     |          |
 | [Nano Blockchain Protocol](specifications/NanoBlockchain)                                           | Andrew Helwer                                       |          |             |         |     ✔     |          |
 | [The Readers-Writers Problem](specifications/ReadersWriters)                                        | Isaac DeFrain                                       |          |             |         |     ✔     |          |
-| [Einstein's Riddle](specifications/EinsteinRiddle)                                                  | Isaac DeFrain, Giuliano Losa                        |          |             |         |     ✔     |    ✔     |
 | [Asynchronous Byzantine Consensus](specifications/aba-asyn-byz)                                     | Thanh Hai Tran, Igor Konnov, Josef Widder           |          |             |         |     ✔     |          |
 | [Folklore Reliable Broadcast](specifications/bcastFolklore)                                         | Thanh Hai Tran, Igor Konnov, Josef Widder           |          |             |         |     ✔     |          |
 | [The Bosco Byzantine Consensus Algorithm](specifications/bosco)                                     | Thanh Hai Tran, Igor Konnov, Josef Widder           |          |             |         |     ✔     |          |
@@ -85,8 +82,12 @@ Here is a list of specs included in this repository, with links to the relevant 
 | [Chameneos, a Concurrency Game](specifications/Chameneos)                                           | Mariusz Ryndzionek                                  |          |             |         |     ✔     |          |
 | [PCR Testing for Snippets of DNA](specifications/glowingRaccoon)                                    | Martin Harrison                                     |          |             |         |     ✔     |          |
 | [RFC 3506: Voucher Transaction System](specifications/byihive)                                      | Santhosh Raju, Cherry G. Mathew, Fransisca Andriani |          |             |         |     ✔     |          |
+| [Yo-Yo Leader Election](specifications/YoYo)                                                        | Ludovic Yvoz, Stephan Merz                          |          |             |         |      ✔    |          |
+| [TCP as defined in RFC 9293](specifications/tcp)                                                    | Markus Kuppe                                        |          |             |         |      ✔    |          |
 | [TLA⁺ Level Checking](specifications/LevelChecking)                                                 | Leslie Lamport                                      |          |             |         |           |          |
 | [Condition-Based Consensus](specifications/cbc_max)                                                 | Thanh Hai Tran, Igor Konnov, Josef Widder           |          |             |         |           |          |
+| [Buffered Random Access File](specifications/braf)                                                  | Calvin Loncaric                                     |          |             |         |     ✔     |          |
+| [Disruptor](specifications/Disruptor)                                                               | Nicholas Schultz-Møller                             |          |             |         |     ✔     |          |
 
 ## Examples Elsewhere
 Here is a list of specs stored in locations outside this repository, including submodules.
@@ -94,7 +95,7 @@ They are not covered by CI testing so it is possible they contain errors, the re
 Ideally these will be moved into this repo over time.
 | Spec                                                                                                                              | Details                                                                                                                                   | Author(s)                                                                  | Beginner | TLAPS Proof | TLC Model | PlusCal | Apalache |
 | --------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- | :------: | :---------: | :-------: | :-----: | :------: |
-| [Blocking Queue](https://github.com/lemmy/BlockingQueue)                                                                          | BlockingQueue                                                                                                                             | Markus Kuppe                                                               |    ✔     |      ✔      |     ✔     |         |          |
+| [Blocking Queue](https://github.com/lemmy/BlockingQueue)                                                                          | BlockingQueue                                                                                                                             | Markus Kuppe                                                               |    ✔     |      ✔      |     ✔     |    (✔)  |          |
 | IEEE 802.16 WiMAX Protocols                                                                                                       | 2006, [paper](https://users.cs.northwestern.edu/~ychen/Papers/npsec06.pdf), [specs](http://list.cs.northwestern.edu/802.16/)              | Prasad Narayana, Ruiming Chen, Yao Zhao, Yan Chen, Zhi (Judy) Fu, Hai Zhou |          |             |           |         |          |
 | On the diversity of asynchronous communication                                                                                    | 2016, [paper](https://dl.acm.org/doi/10.1007/s00165-016-0379-x), [specs](http://hurault.perso.enseeiht.fr/asynchronousCommunication/)     | Florent Chevrou, Aurélie Hurault, Philippe Quéinnec                        |          |             |           |         |          |
 | [Caesar](specifications/Caesar)                                                                                                   | Multi-leader generalized consensus protocol (Arun et al., 2017)                                                                           | Giuliano Losa                                                              |          |             |     ✔     |    ✔    |          |
@@ -151,15 +152,16 @@ Follow these instructions:
 1. Consider including a `README.md` in the spec directory explaining the significance of the spec with links to any relevant websites or publications, or integrate this info as comments in the spec itself
 1. Add an entry to the table of specs included in this repo, summarizing your spec and its attributes
 
+The [`manifest.json`](manifest.json) file is the source of truth for this table, and is a detailed human- & machine-readable description of the specs & their models.
+Its schema is [`manifest-schema.json`](manifest-schema.json).
+All specs in this repository are subject to CI validation to ensure quality.
+
 ## Adding Spec to Continuous Integration
 To combat bitrot, it is important to add your spec and model to the continuous integration system.
 To do this, you'll have to update the [`manifest.json`](manifest.json) file with machine-readable records of your spec files.
 If this process doesn't work for you, you can alternatively modify the [`.ciignore`](.ciignore) file to exclude your spec from validation.
-Otherwise, follow these directions:
+Modifying the `manifest.json` can be done manually or (recommended) following these directions:
 1. Ensure you have Python 3.11+ installed
-1. Download & extract tree-sitter-tlaplus ([zip](https://github.com/tlaplus-community/tree-sitter-tlaplus/archive/refs/heads/main.zip), [tar.gz](https://github.com/tlaplus-community/tree-sitter-tlaplus/archive/refs/heads/main.tar.gz)) to the root of the repository; ensure the extracted folder is named `tree-sitter-tlaplus`
-1. Open a shell and navigate to the repo root; ensure a C++ compiler is installed and on your path
-   - On Windows, this might entail running the below script from the visual studio developer command prompt
 1. It is considered best practice to create & initialize a Python virtual environment to preserve your system package store; run `python -m venv .` then `source ./bin/activate` on Linux & macOS or `.\Scripts\activate.bat` on Windows (run `deactivate` to exit)
 1. Run `pip install -r .github/scripts/requirements.txt`
 1. Run `python .github/scripts/generate_manifest.py`

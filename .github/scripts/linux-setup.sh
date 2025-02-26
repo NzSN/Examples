@@ -37,13 +37,12 @@ main() {
   fi
   # Put all dependencies in their own directory to ensure they aren't included implicitly
   mkdir -p "$DEPS_DIR"
-  # Get tree-sitter-tlaplus
-  wget -nv https://github.com/tlaplus-community/tree-sitter-tlaplus/archive/main.tar.gz -O /tmp/tree-sitter-tlaplus.tar.gz
-  tar -xzf /tmp/tree-sitter-tlaplus.tar.gz --directory "$DEPS_DIR"
-  mv "$DEPS_DIR/tree-sitter-tlaplus-main" "$DEPS_DIR/tree-sitter-tlaplus"
   # Get TLA⁺ tools
   mkdir -p "$DEPS_DIR/tools"
   wget -nv http://nightly.tlapl.us/dist/tla2tools.jar -P "$DEPS_DIR/tools"
+  # Get Apalache
+  wget -nv https://github.com/informalsystems/apalache/releases/latest/download/apalache.tgz -O /tmp/apalache.tgz
+  tar -xzf /tmp/apalache.tgz --directory "$DEPS_DIR"
   # Get TLA⁺ community modules
   mkdir -p "$DEPS_DIR/community"
   wget -nv https://github.com/tlaplus/CommunityModules/releases/latest/download/CommunityModules-deps.jar \
@@ -52,8 +51,20 @@ main() {
   wget -nv https://github.com/tlaplus/tlapm/archive/main.tar.gz -O /tmp/tlapm.tar.gz
   tar -xzf /tmp/tlapm.tar.gz --directory "$DEPS_DIR"
   mv "$DEPS_DIR/tlapm-main" "$DEPS_DIR/tlapm"
-  # Install TLAPS
+  # Get TLAUC
+  mkdir -p "$DEPS_DIR/tlauc"
   kernel=$(uname -s)
+  if [ "$kernel" == "Linux" ]; then
+    TLAUC_OS_STR="linux"
+  elif [ "$kernel" == "Darwin" ]; then
+    TLAUC_OS_STR="macos"
+  else
+    echo "Unknown OS: $kernel"
+    exit 1
+  fi
+  wget -nv "https://github.com/tlaplus-community/tlauc/releases/latest/download/tlauc-$TLAUC_OS_STR.tar.gz" -O /tmp/tlauc.tar.gz
+  tar -xzf /tmp/tlauc.tar.gz --directory "$DEPS_DIR/tlauc"
+  # Install TLAPS
   if [ "$kernel" == "Linux" ]; then
     TLAPM_BIN_TYPE=x86_64-linux-gnu
   elif [ "$kernel" == "Darwin" ]; then
